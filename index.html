@@ -7,19 +7,26 @@
     <style>
         /* --- RESET & VARIABLES --- */
         :root {
-            --bg-color: #f4f6f8;
-            --card-bg: #ffffff;
-            --primary-color: #3b82f6; 
-            --primary-hover: #2563eb;
+            /* Brand Colors */
+            --brand-dark: #027634;
+            --brand-light: #eaf2ed;
+            
+            /* Layout Colors */
+            --bg-color: #ffffff; 
             --text-main: #334155;
             --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --accent-green: #10b981;
-            --accent-red: #ef4444;
-            --radius: 8px;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            
+            /* UI Elements */
+            --primary-color: var(--brand-dark); 
+            --primary-hover: #025e29; 
+            --radius: 12px; /* Slightly rounder corners for the outlined boxes */
+            
             /* CONSTANT: Thumb Width must be known for alignment math */
             --thumb-w: 24px; 
+            
+            /* Status Colors */
+            --accent-green: #027634;
+            --accent-red: #ef4444;
         }
 
         * { box-sizing: border-box; }
@@ -48,7 +55,7 @@
         h1 {
             font-size: 2rem;
             margin-bottom: 10px;
-            color: #1e293b;
+            color: var(--brand-dark);
         }
 
         .intro-text {
@@ -58,22 +65,22 @@
             font-size: 1.1rem;
         }
 
-        /* --- CARDS --- */
+        /* --- CARDS (UPDATED STYLE) --- */
         .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            background: var(--brand-light); /* Light green background */
+            border-radius: var(--radius);   /* Rounded corners */
+            box-shadow: none;               /* No shadows or glows */
             padding: 30px;
             margin-bottom: 25px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--brand-dark); /* Plain dark green line outline */
         }
 
         h2 {
             font-size: 1.25rem;
             margin-top: 0;
             margin-bottom: 15px;
-            color: #1e293b;
-            border-bottom: 2px solid var(--bg-color);
+            color: var(--brand-dark);
+            border-bottom: 1px solid rgba(2, 118, 52, 0.2); /* Subtle separator */
             padding-bottom: 10px;
         }
 
@@ -123,7 +130,7 @@
             cursor: pointer;
             -webkit-appearance: none;
             margin-top: -8px; /* (8px track - 24px thumb) / 2 */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Kept subtle shadow on thumb for usability depth */
             transition: transform 0.1s;
         }
 
@@ -132,9 +139,7 @@
             background: var(--primary-hover);
         }
 
-        /* LABELS: Calculated Absolute Positioning 
-           Formula: StartPx + (Percent * (TotalWidth - ThumbWidth))
-        */
+        /* LABELS: Calculated Absolute Positioning */
         .range-labels {
             position: relative;
             width: 100%;
@@ -158,22 +163,20 @@
         .range-labels span::before {
             content: '|';
             display: block;
-            color: #cbd5e1;
+            color: var(--brand-dark); /* Dark ticks for visibility on green bg */
             font-weight: bold;
             margin-bottom: 4px;
             font-size: 0.6rem;
             position: relative;
             top: -6px;
+            opacity: 0.6;
         }
 
-        /* MATH EXPLANATION:
-           We compensate for the 24px thumb width. 
-           Left edge = 12px. Right edge = 100% - 12px.
-        */
+        /* MATH ALIGNMENT LOGIC */
         .pos-1 { left: 12px; }
-        .pos-2 { left: calc(25% + 6px); } /* 12px + 0.25(W - 24) */
+        .pos-2 { left: calc(25% + 6px); } 
         .pos-3 { left: 50%; }
-        .pos-4 { left: calc(75% - 6px); } /* 12px + 0.75(W - 24) */
+        .pos-4 { left: calc(75% - 6px); } 
         .pos-5 { left: calc(100% - 12px); }
 
         /* --- REFLECTION AREA --- */
@@ -187,12 +190,13 @@
             resize: vertical;
             min-height: 150px;
             transition: border-color 0.2s;
+            background-color: #ffffff; /* White input background for contrast */
         }
 
         textarea:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            /* Removed glow from textarea focus as well per instruction style */
         }
 
         .char-count {
@@ -234,13 +238,12 @@
             border: 2px solid var(--primary-color);
             color: var(--primary-color);
         }
-        .btn-outline:hover { background-color: #eff6ff; }
+        .btn-outline:hover { background-color: rgba(2, 118, 52, 0.05); }
 
         /* --- SUMMARY SECTION --- */
         #summary-section {
             display: none;
-            background-color: #f0f9ff;
-            border: 1px solid #bae6fd;
+            /* Inherits .card styles (light green bg, dark border, no shadow) */
             animation: fadeIn 0.5s ease-in;
         }
 
@@ -286,7 +289,7 @@
         @media (max-width: 600px) {
             h1 { font-size: 1.75rem; }
             .card { padding: 20px; }
-            .range-labels span { font-size: 0.65rem; width: 60px; } /* Tighter width on mobile */
+            .range-labels span { font-size: 0.65rem; width: 60px; } 
         }
     </style>
 </head>
@@ -376,7 +379,7 @@
             <h2>Your Reflection Summary</h2>
             <div id="summaryContent" class="summary-content"></div>
             
-            <div style="margin-top: 20px; border-top: 1px solid #bae6fd; padding-top: 20px;">
+            <div style="margin-top: 20px; border-top: 1px solid var(--brand-dark); opacity: 0.3; padding-top: 20px;">
                 <div class="btn-group">
                     <button class="btn btn-outline" id="copyBtn">
                         <span id="copyText">Copy to Clipboard</span>
